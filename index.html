@@ -186,6 +186,42 @@
     color: var(--balance);
   }
 
+  .summary {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .summary-row .summary-amount {
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+
+  .summary-row.grand-total {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .summary-row.grand-total .summary-amount {
+    font-size: 1.2rem;
+    color: var(--accent);
+  }
+
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #0f0f11;
@@ -232,6 +268,17 @@
         <span class="result-amount" id="balance-amount">₹0.00</span>
       </div>
     </div>
+
+    <div class="summary">
+      <div class="summary-row">
+        <span>GST (18%)</span>
+        <span class="summary-amount" id="gst-amount">₹0.00</span>
+      </div>
+      <div class="summary-row grand-total">
+        <span>Grand total</span>
+        <span class="summary-amount" id="grand-total-amount">₹0.00</span>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -240,9 +287,12 @@
     const balanceEl = document.getElementById('balance-amount');
     const advanceTitleEl = document.getElementById('advance-title');
     const balanceTitleEl = document.getElementById('balance-title');
+    const gstEl = document.getElementById('gst-amount');
+    const grandTotalEl = document.getElementById('grand-total-amount');
     const percentButtons = document.querySelectorAll('.percent-btn');
 
     let advancePercent = 40;
+    const GST_RATE = 0.18;
 
     const currencyFormatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -261,6 +311,10 @@
       balanceTitleEl.textContent = `Balance (${balancePercent}%)`;
       advanceEl.textContent = currencyFormatter.format(safeTotal * advanceFraction);
       balanceEl.textContent = currencyFormatter.format(safeTotal * (1 - advanceFraction));
+
+      const gst = safeTotal * GST_RATE;
+      gstEl.textContent = currencyFormatter.format(gst);
+      grandTotalEl.textContent = currencyFormatter.format(safeTotal + gst);
     }
 
     percentButtons.forEach((btn) => {
