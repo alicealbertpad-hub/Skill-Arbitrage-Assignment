@@ -168,7 +168,7 @@
 
     <div class="input-wrap">
       <label for="total-price">Total project price</label>
-      <span class="currency">$</span>
+      <span class="currency">₹</span>
       <input type="number" id="total-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
     </div>
 
@@ -178,14 +178,14 @@
           <span class="result-title">Advance (40%)</span>
           <span class="result-sub">Collect now</span>
         </div>
-        <span class="result-amount" id="advance-amount">$0.00</span>
+        <span class="result-amount" id="advance-amount">₹0.00</span>
       </div>
       <div class="result-row balance">
         <div class="result-label">
           <span class="result-title">Balance (60%)</span>
           <span class="result-sub">Collect on delivery</span>
         </div>
-        <span class="result-amount" id="balance-amount">$0.00</span>
+        <span class="result-amount" id="balance-amount">₹0.00</span>
       </div>
     </div>
   </div>
@@ -195,9 +195,11 @@
     const advanceEl = document.getElementById('advance-amount');
     const balanceEl = document.getElementById('balance-amount');
 
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
+    const currencyFormatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     });
 
     function update() {
