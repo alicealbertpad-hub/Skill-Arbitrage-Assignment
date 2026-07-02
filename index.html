@@ -60,7 +60,44 @@
 
   .input-wrap {
     position: relative;
+    margin-bottom: 20px;
+  }
+
+  .percent-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .percent-buttons {
+    display: flex;
+    gap: 8px;
     margin-bottom: 28px;
+  }
+
+  .percent-btn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .percent-btn:hover {
+    border-color: var(--accent);
+  }
+
+  .percent-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
   }
 
   .input-wrap .currency {
@@ -172,17 +209,24 @@
       <input type="number" id="total-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
     </div>
 
+    <span class="percent-label">Advance percentage</span>
+    <div class="percent-buttons">
+      <button type="button" class="percent-btn" data-percent="25">25%</button>
+      <button type="button" class="percent-btn active" data-percent="40">40%</button>
+      <button type="button" class="percent-btn" data-percent="50">50%</button>
+    </div>
+
     <div class="results">
       <div class="result-row advance">
         <div class="result-label">
-          <span class="result-title">Advance (40%)</span>
+          <span class="result-title" id="advance-title">Advance (40%)</span>
           <span class="result-sub">Collect now</span>
         </div>
         <span class="result-amount" id="advance-amount">₹0.00</span>
       </div>
       <div class="result-row balance">
         <div class="result-label">
-          <span class="result-title">Balance (60%)</span>
+          <span class="result-title" id="balance-title">Balance (60%)</span>
           <span class="result-sub">Collect on delivery</span>
         </div>
         <span class="result-amount" id="balance-amount">₹0.00</span>
@@ -194,6 +238,11 @@
     const input = document.getElementById('total-price');
     const advanceEl = document.getElementById('advance-amount');
     const balanceEl = document.getElementById('balance-amount');
+    const advanceTitleEl = document.getElementById('advance-title');
+    const balanceTitleEl = document.getElementById('balance-title');
+    const percentButtons = document.querySelectorAll('.percent-btn');
+
+    let advancePercent = 40;
 
     const currencyFormatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -205,9 +254,22 @@
     function update() {
       const total = parseFloat(input.value);
       const safeTotal = Number.isFinite(total) && total > 0 ? total : 0;
-      advanceEl.textContent = currencyFormatter.format(safeTotal * 0.4);
-      balanceEl.textContent = currencyFormatter.format(safeTotal * 0.6);
+      const advanceFraction = advancePercent / 100;
+      const balancePercent = 100 - advancePercent;
+
+      advanceTitleEl.textContent = `Advance (${advancePercent}%)`;
+      balanceTitleEl.textContent = `Balance (${balancePercent}%)`;
+      advanceEl.textContent = currencyFormatter.format(safeTotal * advanceFraction);
+      balanceEl.textContent = currencyFormatter.format(safeTotal * (1 - advanceFraction));
     }
+
+    percentButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        advancePercent = Number(btn.dataset.percent);
+        percentButtons.forEach((b) => b.classList.toggle('active', b === btn));
+        update();
+      });
+    });
 
     input.addEventListener('input', update);
     update();
