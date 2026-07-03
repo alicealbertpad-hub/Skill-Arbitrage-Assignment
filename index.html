@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Split Calculator</title>
+<title>Project Payment Split</title>
 <style>
   :root {
-    color-scheme: light dark;
+    color-scheme: light;
     --bg: #f5f5f7;
     --card-bg: #ffffff;
     --text: #1d1d1f;
@@ -29,38 +29,95 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg);
+    background: radial-gradient(circle at 50% 0%, #ffffff 0%, var(--bg) 60%);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--text);
-    padding: 24px;
+    padding: clamp(12px, 4vw, 24px);
   }
 
   .card {
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     background: var(--card-bg);
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border-radius: clamp(14px, 4vw, 20px);
+    padding: clamp(24px, 7vw, 40px) clamp(18px, 6vw, 36px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: clamp(22px, 6vw, 32px);
   }
 
   h1 {
-    font-size: 1.25rem;
-    margin: 0 0 24px;
-    text-align: center;
+    font-size: clamp(1.15rem, 5vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
   }
 
   label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .input-wrap {
     position: relative;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
+  }
+
+  .percent-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .percent-buttons {
+    display: flex;
+    gap: clamp(6px, 2vw, 8px);
+    margin-bottom: clamp(22px, 6vw, 28px);
+  }
+
+  .percent-btn {
+    flex: 1;
+    min-height: 44px;
+    padding: 11px 4px;
+    font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .percent-btn:hover {
+    border-color: var(--accent);
+  }
+
+  .percent-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 4px 12px -2px rgba(10, 125, 79, 0.35);
   }
 
   .input-wrap .currency {
@@ -75,18 +132,20 @@
 
   input[type="number"] {
     width: 100%;
-    font-size: 1.4rem;
-    padding: 14px 14px 14px 32px;
+    font-size: clamp(1.15rem, 5vw, 1.4rem);
+    font-weight: 600;
+    padding: 14px 14px 14px clamp(28px, 8vw, 32px);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     background: transparent;
     color: var(--text);
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   input[type="number"]:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(10, 125, 79, 0.12);
   }
 
   input[type="number"]::-webkit-outer-spin-button,
@@ -105,7 +164,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 18px;
+    flex-wrap: wrap;
+    row-gap: 6px;
+    padding: clamp(12px, 4vw, 16px) clamp(14px, 4vw, 18px);
     border-radius: 12px;
   }
 
@@ -125,7 +186,8 @@
 
   .result-title {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 3.4vw, 0.95rem);
+    white-space: nowrap;
   }
 
   .result-sub {
@@ -134,7 +196,7 @@
   }
 
   .result-amount {
-    font-size: 1.3rem;
+    font-size: clamp(1.05rem, 4.5vw, 1.3rem);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
@@ -149,63 +211,147 @@
     color: var(--balance);
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f0f11;
-      --card-bg: #1c1c1e;
-      --text: #f5f5f7;
-      --muted: #9a9a9e;
-      --border: #333335;
-      --advance-bg: #113522;
-      --balance-bg: #10233d;
-    }
+  .summary {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
   }
+
+  .summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 4px;
+    font-size: clamp(0.82rem, 3.2vw, 0.9rem);
+    color: var(--muted);
+  }
+
+  .summary-row .summary-amount {
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+
+  .summary-row.grand-total {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    font-size: clamp(0.95rem, 3.8vw, 1.05rem);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .summary-row.grand-total .summary-amount {
+    font-size: clamp(1.05rem, 4.2vw, 1.2rem);
+    color: var(--accent);
+  }
+
+  .footer {
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
 </style>
 </head>
 <body>
   <div class="card">
-    <h1>Project Payment Split Calculator</h1>
+    <div class="header">
+      <h1>Project Payment Split</h1>
+      <p class="subtitle">Work out your advance, balance, and GST in a few seconds.</p>
+    </div>
 
     <div class="input-wrap">
       <label for="total-price">Total project price</label>
-      <span class="currency">$</span>
+      <span class="currency">₹</span>
       <input type="number" id="total-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+    </div>
+
+    <span class="percent-label">Advance percentage</span>
+    <div class="percent-buttons">
+      <button type="button" class="percent-btn" data-percent="25">25%</button>
+      <button type="button" class="percent-btn active" data-percent="40">40%</button>
+      <button type="button" class="percent-btn" data-percent="50">50%</button>
     </div>
 
     <div class="results">
       <div class="result-row advance">
         <div class="result-label">
-          <span class="result-title">Advance (40%)</span>
+          <span class="result-title" id="advance-title">Advance (40%)</span>
           <span class="result-sub">Collect now</span>
         </div>
-        <span class="result-amount" id="advance-amount">$0.00</span>
+        <span class="result-amount" id="advance-amount">₹0.00</span>
       </div>
       <div class="result-row balance">
         <div class="result-label">
-          <span class="result-title">Balance (60%)</span>
+          <span class="result-title" id="balance-title">Balance (60%)</span>
           <span class="result-sub">Collect on delivery</span>
         </div>
-        <span class="result-amount" id="balance-amount">$0.00</span>
+        <span class="result-amount" id="balance-amount">₹0.00</span>
       </div>
     </div>
+
+    <div class="summary">
+      <div class="summary-row">
+        <span>GST (18%)</span>
+        <span class="summary-amount" id="gst-amount">₹0.00</span>
+      </div>
+      <div class="summary-row grand-total">
+        <span>Grand total</span>
+        <span class="summary-amount" id="grand-total-amount">₹0.00</span>
+      </div>
+    </div>
+
+    <p class="footer">Made with Claude Code</p>
   </div>
 
   <script>
     const input = document.getElementById('total-price');
     const advanceEl = document.getElementById('advance-amount');
     const balanceEl = document.getElementById('balance-amount');
+    const advanceTitleEl = document.getElementById('advance-title');
+    const balanceTitleEl = document.getElementById('balance-title');
+    const gstEl = document.getElementById('gst-amount');
+    const grandTotalEl = document.getElementById('grand-total-amount');
+    const percentButtons = document.querySelectorAll('.percent-btn');
 
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
+    let advancePercent = 40;
+    const GST_RATE = 0.18;
+
+    const currencyFormatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     });
 
     function update() {
       const total = parseFloat(input.value);
       const safeTotal = Number.isFinite(total) && total > 0 ? total : 0;
-      advanceEl.textContent = currencyFormatter.format(safeTotal * 0.4);
-      balanceEl.textContent = currencyFormatter.format(safeTotal * 0.6);
+      const advanceFraction = advancePercent / 100;
+      const balancePercent = 100 - advancePercent;
+
+      advanceTitleEl.textContent = `Advance (${advancePercent}%)`;
+      balanceTitleEl.textContent = `Balance (${balancePercent}%)`;
+      advanceEl.textContent = currencyFormatter.format(safeTotal * advanceFraction);
+      balanceEl.textContent = currencyFormatter.format(safeTotal * (1 - advanceFraction));
+
+      const gst = safeTotal * GST_RATE;
+      gstEl.textContent = currencyFormatter.format(gst);
+      grandTotalEl.textContent = currencyFormatter.format(safeTotal + gst);
     }
+
+    percentButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        advancePercent = Number(btn.dataset.percent);
+        percentButtons.forEach((b) => b.classList.toggle('active', b === btn));
+        update();
+      });
+    });
 
     input.addEventListener('input', update);
     update();
