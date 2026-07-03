@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Split Calculator</title>
+<title>Project Payment Split</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -29,7 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg);
+    background: radial-gradient(circle at 50% 0%, #ffffff 0%, var(--bg) 60%);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--text);
     padding: 24px;
@@ -37,38 +37,56 @@
 
   .card {
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     background: var(--card-bg);
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
   }
 
   h1 {
-    font-size: 1.25rem;
-    margin: 0 0 24px;
-    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
   }
 
   label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .input-wrap {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .percent-label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .percent-buttons {
@@ -79,7 +97,7 @@
 
   .percent-btn {
     flex: 1;
-    padding: 10px 0;
+    padding: 11px 0;
     font-size: 0.95rem;
     font-weight: 600;
     border: 1px solid var(--border);
@@ -87,7 +105,7 @@
     background: transparent;
     color: var(--text);
     cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .percent-btn:hover {
@@ -98,6 +116,7 @@
     background: var(--accent);
     border-color: var(--accent);
     color: #ffffff;
+    box-shadow: 0 4px 12px -2px rgba(10, 125, 79, 0.35);
   }
 
   .input-wrap .currency {
@@ -113,17 +132,19 @@
   input[type="number"] {
     width: 100%;
     font-size: 1.4rem;
+    font-weight: 600;
     padding: 14px 14px 14px 32px;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     background: transparent;
     color: var(--text);
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   input[type="number"]:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(10, 125, 79, 0.12);
   }
 
   input[type="number"]::-webkit-outer-spin-button,
@@ -232,12 +253,24 @@
       --advance-bg: #113522;
       --balance-bg: #10233d;
     }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #232326 0%, var(--bg) 60%);
+    }
+
+    .card {
+      border-color: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+    }
   }
 </style>
 </head>
 <body>
   <div class="card">
-    <h1>Project Payment Split Calculator</h1>
+    <div class="header">
+      <h1>Project Payment Split</h1>
+      <p class="subtitle">Work out your advance, balance, and GST in a few seconds.</p>
+    </div>
 
     <div class="input-wrap">
       <label for="total-price">Total project price</label>
